@@ -11,19 +11,13 @@ from drf_generator import generate
 
 
 def main(extended_drf):
-    operational_devices = []
-    cache_devices = []
     origin_path = pathlib.Path('origin_devices.dbl')
     new_path = pathlib.Path('new_cache_devices.dbl')
 
     # Generate DABBEL file to list details of existing devices.
     with open(origin_path, 'w+') as origin_file:
         for device in generate(extended_drf):
-            operational_devices.append(device)
             origin_file.write(f'LIST {device}\n')
-
-    for device in operational_devices:
-        cache_devices.append(re.sub(r'^\w:(.*)$', r'Z:\1', device))
 
     # Run dabbel to get details of existing devices
     existing_dabbel = subprocess.check_output(

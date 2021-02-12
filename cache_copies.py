@@ -31,7 +31,18 @@ def main(extended_drf):
     # Replace full name
     f_name = re.sub(r'(\nFNAME .* )\w:([\w\d_]+\))', r'\1Z:\2', adds)
     # Replace front-end with CACHE
-    new_fe = re.sub(r'(\nADD .*\(.*,) [\w\d_]{2,6}(,.*\n)', r'\1 CACHE\2', f_name)
+    new_fe = re.sub(
+        r'(\nADD .*\(.*,) [\w\d_]{2,6}(,.*\n)',
+        r'\1 CACHE\2',
+        f_name
+    )
+    # Replace the SSDN with a CACHE appropirate value
+    # \g must be used for the backreference since it's followed by a number
+    new_fe = re.sub(
+        r'(\nSSDN.*\().*(\)\n)',
+        r'\g<1>000A/0000/0000/0000\2',
+        f_name
+    )
 
     # Write modifications to file
     with open(new_path, 'w+') as new_file:
